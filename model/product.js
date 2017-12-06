@@ -84,10 +84,20 @@ module.exports.addProduct = function(product,callback){
 module.exports.getAllProduct = function(callback){
     Product.find({},callback);
 }
-module.exports.getAllClosedProduct = function(callback){
-    Product.find({"end_date" : {"$lt" : new Date()},"status":true},callback);
-}
 
+
+module.exports.getAllClosedProduct = function(callback){
+    Product.find({"end_date" : {"$lt" : new Date()},"status":true,"closing_informed":false},callback);
+}
+// module.exports.getIntrestedProduct = function(callback){
+//     Product.find({"start_date" : {"$lt" : new Date()},"status":true},callback);
+// }
+
+module.exports.getIntrestedProduct = function(callback){
+    Product.find({starting_informed : false},callback);
+    // Product.find({"start_date" : {"$lt" : new Date()},"status":true},callback);
+    // console.log(new Date());
+}
 module.exports.deleteProduct = function(id,callback){
     const query = {_id: id}
     Product.remove(query,callback);
@@ -96,3 +106,22 @@ module.exports.deleteProduct = function(id,callback){
 module.exports.getProductById = function(id,callback){
     Product.findOne({_id: id},callback);
 }
+// module.exports.getAllClosedProductdetails = function(callback){
+//     db.products.aggregate([
+//         {
+//            $unwind: "$bidders"
+//         },
+//         {
+//            $lookup:
+//               {
+//                  from: "users",
+//                  localField: "bidders",
+//                  foreignField: "user_id",
+//                  as: "product_docs"
+//              }
+//         },
+//         {
+//            $match: { "product_docs": { $ne: [] } }
+//         }
+//      ])
+// }
