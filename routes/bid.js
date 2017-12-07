@@ -3,6 +3,10 @@ const router = express.Router();
 // const mongoose = require('mongoose');
 //var CronJob = require('cron').CronJob;
 //var cron = require('cron-scheduler')
+var http = require('http');
+var data = JSON.stringify({
+    'id': '2'
+  });
 var schedule = require('node-schedule');
 const config = require('../config/database');
 
@@ -17,6 +21,39 @@ let transporter = nodemailer.createTransport({
     }
 });
 
+// var extServerOptions = {
+//     host: 'localhost',
+//     port: '3000',
+//     path: '/products/inform-closedproduct',
+//     method: 'GET'
+// };
+// function get() {
+//     http.request(extServerOptions, function (res) {
+//         res.setEncoding('utf8');
+     
+ 
+//     }).end();
+// };
+ 
+// get();
+ 
+
+// var options = {
+//     host: 'localhost',
+//      port: '3000',
+//      path: '/products/inform-closedproduct/' + 123123,
+//     //  url : 'http://localhost/products/inform-closedproduct/' + 123123,
+//     method: 'POST',
+//     headers: {
+//         'Content-Type': 'application/json; charset=utf-8',
+//         'Content-Length': data.length
+    
+//     }
+//   };
+//   var req = http.request(options, function(res) {
+
+// });
+  
 // //cron set up
 // var job = new CronJob('00 30 11 * * 1-5', function() {
 //     /*
@@ -77,8 +114,9 @@ router.get('/products',(req,res,next)=>{
 
 
     //router.get('/closed_products',(req,res,next)=>{
-        var j = schedule.scheduleJob('*/5 * * * *', function(){
+        var j = schedule.scheduleJob('*/1 * * * *', function(){
             console.log('closed product update every  5 min');
+           
         User.getUsers((err,user)=>{
             if(err) throw err;
             var users = {};
@@ -101,7 +139,25 @@ router.get('/products',(req,res,next)=>{
                 //console.log(close);
            
                  //return res.json(products);
+               
                  close.forEach(function(arr) {
+
+                    var extServerOptions = {
+                        host: 'localhost',
+                        port: '3000',
+                        path: '/products/inform-closedproduct/' + arr._id,
+                        method: 'GET'
+                    };
+                    function get() {
+                        http.request(extServerOptions, function (res) {
+                            res.setEncoding('utf8');
+                         
+                     
+                        }).end();
+                    };
+                     
+                    get();
+                    
                  console.log(arr.name);
                     var highest = arr.bid_amount;
                     var winnerEmail = '';
@@ -223,9 +279,11 @@ var value = {
        // });
         
     });
+
+    
 //intrested users
-var j = schedule.scheduleJob('*/6 * * * *', function(){
-    console.log("interested product update every 5 min");
+var j = schedule.scheduleJob('*/1 * * * *', function(){
+    console.log("interested product update every 6 min");
     // router.get('/intrested',function(req,res){
         User.getUsers((err,user)=>{
             // console.log(user);
@@ -245,7 +303,21 @@ var j = schedule.scheduleJob('*/6 * * * *', function(){
            
                 if(err) throw err;
                 products.forEach(function(i) {
-                   
+                    var extServerOptions = {
+                        host: 'localhost',
+                        port: '3000',
+                        path: '/products/inform-startproduct/' + i._id,
+                        method: 'GET'
+                    };
+                    function get() {
+                        http.request(extServerOptions, function (res) {
+                            res.setEncoding('utf8');
+                         
+                     
+                        }).end();
+                    };
+                     
+                    get();
                     // console.log(i.intrested_ids);
                     i.intrested_ids.forEach(function(elem) {
                       
