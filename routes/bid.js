@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 // const mongoose = require('mongoose');
 //var CronJob = require('cron').CronJob;
-
 var schedule = require('node-schedule');
 const config = require('../config/database');
 var http = require('http');
@@ -75,6 +74,7 @@ router.get('/products',(req,res,next)=>{
                 //console.log(close);
            
                  //return res.json(products);
+               
                  close.forEach(function(arr) {
 
                     var extServerOptions = {
@@ -92,7 +92,6 @@ router.get('/products',(req,res,next)=>{
                     };
                      
                     get();
-
                  console.log(arr.name);
                     var highest = arr.bid_amount;
                     var winnerEmail = '';
