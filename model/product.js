@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const config = require("../config/database");
-
+var Schema = mongoose.Schema;
 const ProductsSchema = mongoose.Schema({
         name: {
             type : String,
@@ -67,6 +67,13 @@ const ProductsSchema = mongoose.Schema({
         closing_informed :{
             type: Boolean,
             default: false
+        },
+        user_notification : {
+            user_id : Schema.ObjectId ,
+            status : {
+                type : Boolean,
+                default : true,
+            }
         }
        
 });
@@ -87,16 +94,13 @@ module.exports.getAllProduct = function(callback){
 
 
 module.exports.getAllClosedProduct = function(callback){
-    Product.find({"end_date" : {"$lt" : new Date()},"status":true,"closing_informed":false},callback);
+    Product.find({"end_date" : {"$lte" : new Date()},"status":true,"closing_informed":false},callback);
 }
-// module.exports.getIntrestedProduct = function(callback){
-//     Product.find({"start_date" : {"$lt" : new Date()},"status":true},callback);
-// }
+
 
 module.exports.getIntrestedProduct = function(callback){
-    Product.find({starting_informed : false},callback);
-    // Product.find({"start_date" : {"$lt" : new Date()},"status":true},callback);
-    // console.log(new Date());
+    Product.find({"start_date" : {"$lte" : new Date()},"status":true,"starting_informed":false},callback);
+    
 }
 module.exports.deleteProduct = function(id,callback){
     const query = {_id: id}
