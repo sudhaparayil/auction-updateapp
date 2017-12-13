@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 // const mongoose = require('mongoose');
-//var CronJob = require('cron').CronJob;
-var schedule = require('node-schedule');
+var CronJob = require('cron').CronJob;
+//var schedule = require('node-schedule');
 const config = require('../config/database');
 var http = require('http');
 const User = require("../model/user");
@@ -46,12 +46,15 @@ router.get('/products',(req,res,next)=>{
 
 
 
+
 //fetch closed products
 
 
    // router.get('/closed_products',(req,res,next)=>{
-        var j = schedule.scheduleJob('*/1 * * * *', function(){
-            console.log('update every  1 min');
+        // var j = schedule.scheduleJob('*/1 * * * *', function(){
+        //     console.log('update every  1 min');
+        new CronJob('* * * * * *', function() {
+            console.log('You will see this message every second');
         User.getUsers((err,user)=>{
             if(err) throw err;
             var users = {};
@@ -336,8 +339,8 @@ var value = {
          
            
         });
-        });
+        // });
         
-   
+    }, null, true, 'America/Los_Angeles'); 
     
 module.exports = router;
