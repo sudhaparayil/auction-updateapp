@@ -1,60 +1,22 @@
 const express = require("express");
 const router = express.Router();
-// const mongoose = require('mongoose');
 var CronJob = require('cron').CronJob;
-//var schedule = require('node-schedule');
 const config = require('../config/database');
 var http = require('http');
 const User = require("../model/user");
 const Product = require("../model/product");
 const nodemailer = require('nodemailer');
-let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: "mean.symptots@gmail.com", // generated ethereal user
-        pass: "Symptots@2017"  // generated ethereal password
-    }
-});
 
-//get active users
-router.get('/users_id_as_index',(req,res,next)=>{
-    User.getUsers((err,user)=>{
-        if(err) throw err;
-        var users = {};
-        user.forEach((usr, i) => {
-            tmp = {};
-            tmp._id = usr._id;
-            tmp.name = usr.name;
-            tmp.email = usr.email;
-            tmp.date_tym = usr.date_tym;
-            users[usr._id] = tmp;
-        });
-        return res.json(users);
-       
-    })
-    
-});
+            let transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: "mean.symptots@gmail.com", // generated ethereal user
+                    pass: "Symptots@2017"  // generated ethereal password
+                }
+            });
 
-//all products
-router.get('/products',(req,res,next)=>{
-    Product.getAllProduct((err,product)=>{
-        if(err) throw err;
-        return res.json(product);
-    })    
-});
-
-
-
-
-
-//fetch closed products
-
-
-   // router.get('/closed_products',(req,res,next)=>{
-        // var j = schedule.scheduleJob('*/1 * * * *', function(){
-        //     console.log('update every  1 min');
-        new CronJob('* * * * * *', function() {
-            console.log('You will see this message every second');
+    //get active users
+    router.get('/users_id_as_index',(req,res,next)=>{
         User.getUsers((err,user)=>{
             if(err) throw err;
             var users = {};
@@ -66,17 +28,49 @@ router.get('/products',(req,res,next)=>{
                 tmp.date_tym = usr.date_tym;
                 users[usr._id] = tmp;
             });
-           // return res.json(users);
-          // cosole.log(users);
+            return res.json(users);
+        
+        })
+        
+    });
+
+        //all products
+        router.get('/products',(req,res,next)=>{
+            Product.getAllProduct((err,product)=>{
+                if(err) throw err;
+                return res.json(product);
+            })    
+        });
+
+
+
+
+
+//fetch closed products
+
+
+  // router.get('/closed_products',(req,res,next)=>{
+       
+        new CronJob('* * * * * *', function() {
+            console.log('You will see this message every second');
+                    User.getUsers((err,user)=>{
+                        if(err) throw err;
+                        var users = {};
+                        user.forEach((usr, i) => {
+                            tmp = {};
+                            tmp._id = usr._id;
+                            tmp.name = usr.name;
+                            tmp.email = usr.email;
+                            tmp.date_tym = usr.date_tym;
+                            users[usr._id] = tmp;
+                        });
+          
        
 
 
 
             Product.getAllClosedProduct((err,close)=>{
-                // if(err) throw err;
-                //console.log(close);
-           
-                 //return res.json(products);
+                
                
                  close.forEach(function(arr) {
 
@@ -113,10 +107,7 @@ router.get('/products',(req,res,next)=>{
 console.log(winnerEmail);
 nodemailer.createTestAccount((err, account) => {
     
-        // create reusable transporter object using the default SMTP transport
-       
-    // console.log(users[elem.user_id].email);
-        // setup email data with unicode symbols
+        
         
         let mailOptions = {
            
@@ -134,12 +125,7 @@ nodemailer.createTestAccount((err, account) => {
                 console.log('error');
                  return console.log(error);
             }
-            // console.log('Message sent: %s', info.messageId);
-            
-            // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-    
-            // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@blurdybloop.com>
-            // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+           
         });
     });
 //***************** END email for winner****************************
@@ -168,12 +154,7 @@ nodemailer.createTestAccount((err, account) => {
                                         console.log('error');
                                          return console.log(error);
                                     }
-                                    // console.log('Message sent: %s', info.messageId);
-                                    
-                                    // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-                            
-                                    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@blurdybloop.com>
-                                    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+                                   
                                 });
                             });
 //********************END email for particpants******************
@@ -228,43 +209,51 @@ var value = {
       
          });
         })
-   
+   // });
       
 //intrested users
- //router.get('/intrested',function(req,res){
+
+    // router.get('/intrested',function(req,res){
+        console.log('befor intrested');
         User.getUsers((err,user)=>{
             // console.log(user);
             if(err) throw err;
             var users = {};
-            user.forEach((usr, c) => {
-                tmp = {};
-                tmp._id = usr._id;
-                tmp.name = usr.name;
-                tmp.email = usr.email;
-                tmp.date_tym = usr.date_tym;
-                users[usr._id] = tmp;
-                // console.log(users);
-     
-            // console.log("user get");
+                        user.forEach((usr, c) => {
+                            tmp = {};
+                            tmp._id = usr._id;
+                            tmp.name = usr.name;
+                            tmp.email = usr.email;
+                            tmp.date_tym = usr.date_tym;
+                            users[usr._id] = tmp;
+                            // console.log(users);
+                        });
+            
             Product.getIntrestedProduct((err,products)=>{
-           
+                console.log(products);
+                console.log('products fetched completed');
                 if(err) throw err;
                 products.forEach(function(i) {
-                    var extServerOptions = {
-                        host: 'localhost',
-                        port: '3000',
-                        path: '/products/inform-startproduct/' + i._id,
-                        method: 'GET'
-                    };
-                    function get() {
-                        http.request(extServerOptions, function (res) {
-                            res.setEncoding('utf8');
-                         
+
+              
+                 // console.log(products);
+                 var extServerOptions = {
+                    host: 'localhost',
+                    port: '3000',
+                    path: '/products/inform-startproduct/' + i._id,
+                    method: 'GET'
+                };
+                function get() {
+                    http.request(extServerOptions, function (res) {
+                        res.setEncoding('utf8');
                      
-                        }).end();
-                    };
-                     
-                    get();
+                 
+                    }).end();
+                };
+                 
+                get();
+                console.log('api called');
+                 
                    
                     // console.log(i.intrested_ids);
                     i.intrested_ids.forEach(function(elem) {
@@ -319,28 +308,39 @@ var value = {
                                 },
                                 function(err, updatedPro){
                                     if(err){
-                                      //  res.send("error on send mail ");
+                                        res.send("error on send mail ");
                                     }else{
                                         // res.json(updatedPro);
                                     }
                                 }
                             
                                )
-                         
+                         //   return res.json(users);
+                           // console.log(users)
                            
                         })
 
                 });
                
-           
+            // console.log(products)
+                // this.user.email.forEach((i) => {
+                //     console.log(i);
+                //   });
+        
+                // console.log(products[0].starting_informed);
+                // console.log(products[0]._id);
+            
+                
+                //    return res.json(products);
              
                 
-            });
+            
          
            
         });
-        // });
+     
+    
         
-    }, null, true, 'America/Los_Angeles'); 
+   }, null, true, 'America/Los_Angeles'); 
     
 module.exports = router;

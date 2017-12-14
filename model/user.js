@@ -24,6 +24,7 @@ const User = module.exports = mongoose.model('User', UserSchema,'users');
 
 //all users
 module.exports.getUsers = function(callback){
-    User.find({role:'user',verified:'true',delete_status:'false',block_status:'false'},callback);
+    User.find({role:'user',verified:'true'},callback);
+   // User.find({role:'user',verified:'true',delete_status:'false',block_status:'false'},callback);
    
 }
